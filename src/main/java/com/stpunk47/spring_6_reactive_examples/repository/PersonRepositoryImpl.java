@@ -14,7 +14,14 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Mono<Person> getById(Integer id) {
-        return Mono.just(one);
+        if (id == null) {
+            return Mono.empty();
+        }
+
+        return findAll()
+                .filter(person -> id.equals(person.getId()))
+                .next()
+                .switchIfEmpty(Mono.empty());
     }
 
     @Override

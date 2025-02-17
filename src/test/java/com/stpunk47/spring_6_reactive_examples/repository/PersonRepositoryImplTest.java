@@ -7,6 +7,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class PersonRepositoryImplTest {
 
     PersonRepository personRepository = new PersonRepositoryImpl();
@@ -113,6 +116,25 @@ class PersonRepositoryImplTest {
                 person -> System.out.println(person.toString()),  // onNext
                 error -> System.out.println("Error: " + error.getMessage()),  // onError
                 () -> System.out.println("Completed"));  // onComplete
+    }
+
+    @Test
+    void testGetByIdFound() {
+        // Test when person exists
+        Mono<Person> personMono = personRepository.getById(3);
+
+        assertTrue(personMono.hasElement().block());
 
     }
+
+    @Test
+    void testGetByIdNotFound() {
+        // Test when person exists
+        Mono<Person> personMono = personRepository.getById(6);
+
+        assertFalse(personMono.hasElement().block());
+
+    }
+
+
 }
